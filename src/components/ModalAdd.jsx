@@ -41,7 +41,9 @@ function ModalAdd({ isOpen, onClose, data }) {
       };
       dispatch({ type: 'add_todo', payload: data });
     }
-    setDataSubmit({});
+    setDataSubmit({
+      status: false,
+    });
     onClose();
   };
 
@@ -104,7 +106,9 @@ function ModalAdd({ isOpen, onClose, data }) {
             variant="ghost"
             mr={3}
             onClick={() => {
-              setDataSubmit({});
+              setDataSubmit({
+                status: false,
+              });
               onClose();
             }}
           >

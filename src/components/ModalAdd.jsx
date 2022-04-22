@@ -63,7 +63,7 @@ function ModalAdd({ isOpen, onClose, data }) {
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Add To Do</ModalHeader>
+        <ModalHeader>{data ? 'Edit To Do' : 'Add To Do'}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text>Title</Text>

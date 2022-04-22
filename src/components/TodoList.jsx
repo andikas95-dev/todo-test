@@ -21,7 +21,6 @@ function TodoList({ isDone = false }) {
   const [detail, setDetail] = useState({});
 
   if (state.data) {
-    console.log(state.data);
     return (
       <Fragment>
         {state.data

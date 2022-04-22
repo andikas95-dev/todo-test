@@ -1,8 +1,10 @@
 import { DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Spacer, Text } from '@chakra-ui/react';
-import React from 'react';
+import React, { useContext } from 'react';
+import { contextApp } from '../App';
 
-function TodoCard({ item, clickDetail }) {
+function TodoCard({ item, clickDetail, clickEdit, isDone }) {
+  const { dispatch } = useContext(contextApp);
   return (
     <Box bg="#ccc" textAlign="left" p={2} my={2}>
       <Flex>
@@ -22,16 +24,22 @@ function TodoCard({ item, clickDetail }) {
           color="white"
           _hover={{ color: 'black', bg: '#55efc4' }}
           mr={2}
+          onClick={() => clickEdit(item)}
         >
           <EditIcon />
         </Button>
-        <Button
-          bg="tomato"
-          color="white"
-          _hover={{ color: 'black', bg: 'white' }}
-        >
-          <DeleteIcon />
-        </Button>
+        {!isDone && (
+          <Button
+            bg="tomato"
+            color="white"
+            _hover={{ color: 'black', bg: 'white' }}
+            onClick={e => {
+              dispatch({ type: 'delete_todo', payload: item.id });
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        )}
       </Flex>
     </Box>
   );

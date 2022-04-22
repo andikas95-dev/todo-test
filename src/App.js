@@ -6,20 +6,30 @@ import {
   theme,
   Center,
   Button,
-  Flex,
-  Divider,
   Spinner,
+  useDisclosure,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
 } from '@chakra-ui/react';
 import { SmallAddIcon } from '@chakra-ui/icons';
-import TodoCard from './components/TodoCard';
 import { initialState, reducer } from './reducers';
 import axios from 'axios';
 import TodoList from './components/TodoList';
+import ModalAdd from './components/ModalAdd';
 
 export const contextApp = createContext();
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const {
+    isOpen: openModalAdd,
+    onOpen: onOpenModalAdd,
+    onClose: onCLoseModalAdd,
+  } = useDisclosure();
 
   useEffect(() => {
     fetchData();
@@ -38,7 +48,6 @@ function App() {
       dispatch({ type: 'loading' });
     }
   };
-  console.log(state);
 
   return (
     <ChakraProvider theme={theme}>
@@ -56,19 +65,30 @@ function App() {
               variant="solid"
               mt={5}
               leftIcon={<SmallAddIcon />}
+              onClick={onOpenModalAdd}
             >
               Add Task
             </Button>
-            <Flex align="center">
-              <Divider />
-              <Text padding="2" w="100%">
-                Todo List
-              </Text>
-              <Divider />
-            </Flex>
-            {state.isLoading ? <Spinner /> : <TodoList />}
+
+            <Tabs>
+              <TabList>
+                <Tab> Todo List</Tab>
+                <Tab>List Done</Tab>
+              </TabList>
+
+              <TabPanels>
+                <TabPanel>
+                  {state.isLoading ? <Spinner /> : <TodoList />}
+                </TabPanel>
+                <TabPanel>
+                  {state.isLoading ? <Spinner /> : <TodoList isDone />}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </Box>
         </Center>
+
+        <ModalAdd isOpen={openModalAdd} onClose={onCLoseModalAdd} />
       </contextApp.Provider>
     </ChakraProvider>
   );

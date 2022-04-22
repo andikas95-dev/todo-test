@@ -2,6 +2,7 @@ import { Box, Text, useDisclosure } from '@chakra-ui/react';
 import moment from 'moment';
 import React, { Fragment, useState } from 'react';
 import { contextApp } from '../App';
+import ModalAdd from './ModalAdd';
 import ModalDetail from './ModalDetail';
 import TodoCard from './TodoCard';
 
@@ -12,12 +13,18 @@ function TodoList({ isDone = false }) {
     onOpen: onOpenModalDetail,
     onClose: onCLoseModalDetail,
   } = useDisclosure();
+  const {
+    isOpen: openModalEdit,
+    onOpen: onOpenModalEdit,
+    onClose: onCLoseModalEdit,
+  } = useDisclosure();
   const [detail, setDetail] = useState({});
 
   if (state.data) {
     return (
       <Fragment>
         {state.data
+          .filter(item => (!isDone ? item.status === 0 : item.status === 1))
           .sort((a, b) =>
             !isDone
               ? moment(b.createdAt) - moment(a.createdAt)
@@ -27,10 +34,15 @@ function TodoList({ isDone = false }) {
             <TodoCard
               key={item.id}
               item={item}
+              clickEdit={e => {
+                setDetail(e);
+                onOpenModalEdit();
+              }}
               clickDetail={e => {
                 setDetail(e);
                 onOpenModalDetail();
               }}
+              isDone={!!item.status}
             />
           ))}
         <ModalDetail
@@ -38,6 +50,14 @@ function TodoList({ isDone = false }) {
           onClose={() => {
             setDetail({});
             onCLoseModalDetail();
+          }}
+          data={detail}
+        />
+        <ModalAdd
+          isOpen={openModalEdit}
+          onClose={() => {
+            setDetail({});
+            onCLoseModalEdit();
           }}
           data={detail}
         />
